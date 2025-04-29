@@ -7,12 +7,13 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
+        /* Custom styles for the body background */
         body {
             font-family: 'Inter', sans-serif;
             /* Using a subtle gradient background */
             background: linear-gradient(to bottom right, #e0f2f7, #eef2ff); /* Light blue to very light purple gradient */
         }
-        /* You can add more custom styles here if needed, but Tailwind covers a lot */
+        /* Additional custom styles can be added here if needed */
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-6">
@@ -55,11 +56,13 @@
             { name: "Tengfei Long", company: "Coventry University", capabilities: ["Design for Manufacturing", "Digital Twin", "CAD", "FEA"] },
             { name: "Stephen Spooner", company: "Coventry University", capabilities: ["Sustainability", "Net Zero", "Project Management", "Risk Assessment"] },
             { name: "Lara Harris", company: "Coventry University", capabilities: ["Data", "Digital Twin" , "Data Science"] },
-            { name: "Glen Turley", company: "Coventry University", capabilities: ["Metrology", "Design", "Material Science","Design" ,"CAD"] }, // <-- Comma added
-            { name: "Shone George", company: "Coventry University", capabilities: ["Six Sigma", "Digital Twin", "Design for Manufacturing", "Design" ,"CAD"] }, // <-- Comma added
-            { name: "Kathy Zhang", company: "Coventry University", capabilities: ["Sustainability", "Net Zero"] }
-        ]; // <-- Comma added
+            { name: "Glen Turley", company: "Coventry University", capabilities: ["Metrology", "Design", "Material Science","Design" ,"CAD"] },
+            { name: "Shone George", company: "Coventry University", capabilities: ["Six Sigma", "Digital Twin", "Design for Manufacturing", "Design" ,"CAD"] },
+            { name: "Kathy Zhang", company: "Coventry University", capabilities: ["Sustainability", "Net Zero"] }, // Corrected: Added comma here
+            { name: "Masoud Ahmadinia", company: "Coventry University", capabilities: ["Sustainability", "Net Zero", "Tool maker", "AI", "website buider", ] }
+        ]; // Corrected: Added comma here
 
+        // Get references to DOM elements
         const searchInput = document.getElementById('capabilitySearch');
         const searchButton = document.getElementById('searchButton');
         const resultsDiv = document.getElementById('results');
@@ -73,11 +76,13 @@
             resultsDiv.classList.add('hidden'); // Hide results section initially
             hideMessage(); // Hide any previous messages
 
+            // Check if the search term is empty
             if (searchTerm === '') {
                 showMessage("Please enter a capability to search.", 'bg-yellow-100 text-yellow-800');
-                return;
+                return; // Stop execution if search term is empty
             }
 
+            // Filter engineers based on the search term
             const matchingEngineers = engineersData.filter(engineer =>
                 // Check if any of the engineer's capabilities include the search term (case-insensitive)
                 engineer.capabilities.some(capability =>
@@ -85,32 +90,34 @@
                 )
             );
 
+            // Display results or a message if no engineers are found
             if (matchingEngineers.length > 0) {
                 // Display results
                 matchingEngineers.forEach(engineer => {
                     const resultItem = document.createElement('p');
-                    // Added styling for individual result items
+                    // Added styling for individual result items using Tailwind classes
                     resultItem.className = 'text-gray-800 py-2 border-b border-gray-200 last:border-b-0'; // Added padding and border
                     resultItem.textContent = `${engineer.name} (${engineer.company})`;
                     resultsList.appendChild(resultItem);
                 });
                 resultsDiv.classList.remove('hidden'); // Show the results section
             } else {
+                // Show message if no engineers are found
                 showMessage(`No engineers found with the capability "${searchTerm}".`, 'bg-yellow-100 text-yellow-800');
             }
         });
 
-        // Function to display messages
+        // Function to display messages in the message box
         function showMessage(message, className) {
             messageBox.textContent = message;
             // Ensure existing classes like shadow-sm and rounded-lg are kept when updating
             messageBox.className = `mt-6 p-4 rounded-lg shadow-sm ${className}`; // Apply dynamic class and retain base styles
-            messageBox.classList.remove('hidden');
+            messageBox.classList.remove('hidden'); // Make the message box visible
         }
 
-        // Function to hide messages
+        // Function to hide the message box
         function hideMessage() {
-            messageBox.classList.add('hidden');
+            messageBox.classList.add('hidden'); // Hide the message box
             messageBox.textContent = ''; // Clear message text
         }
 
