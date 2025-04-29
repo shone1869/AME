@@ -1,1 +1,126 @@
-d
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Engineer Capability Search</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles for the body background */
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Using a subtle gradient background */
+            background: linear-gradient(to bottom right, #e0f2f7, #eef2ff); /* Light blue to very light purple gradient */
+        }
+        /* Additional custom styles can be added here if needed */
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-6">
+    <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md transform transition-all duration-300 hover:scale-[1.01]">
+        <h1 class="text-3xl font-extrabold mb-8 text-center text-blue-700 leading-tight">
+            Find Engineers by Capability
+        </h1>
+
+        <div class="mb-6">
+            <label for="capabilitySearch" class="block text-gray-700 text-sm font-semibold mb-2">
+                Enter Capability (e.g., APQP):
+            </label>
+            <input type="text" id="capabilitySearch"
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out"
+                   placeholder="Enter capability...">
+        </div>
+
+        <button id="searchButton"
+                class="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:ring-opacity-50 shadow-lg transition duration-300 ease-in-out transform hover:-translate-y-0.5 hover:shadow-xl">
+            Search
+        </button>
+
+        <div id="results" class="mt-8 border-t border-gray-200 pt-6 hidden">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800 border-b border-gray-300 pb-2">
+                Search Results
+            </h2>
+            <div id="resultsList" class="space-y-3">
+                </div>
+        </div>
+
+        <div id="messageBox" class="mt-6 p-4 bg-yellow-100 text-yellow-800 rounded-lg shadow-sm hidden" role="alert">
+            </div>
+    </div>
+
+    <script>
+        // Sample data: Array of engineer objects
+        // In a real application, this data would likely come from a database or API
+        const engineersData = [
+            { name: "Marcos Kauffman", company: "Coventry University", capabilities: ["APQP", "Lean Manufacturing", "Six Sigma", "Digital Twin", "IP" , "Design for Manufacturing" , "Design" , "CAD", "FEA"] },
+            { name: "Tengfei Long", company: "Coventry University", capabilities: ["Design for Manufacturing", "Digital Twin", "CAD", "FEA"] },
+            { name: "Stephen Spooner", company: "Coventry University", capabilities: ["Sustainability", "Net Zero", "Project Management", "Risk Assessment"] },
+            { name: "Lara Harris", company: "Coventry University", capabilities: ["Data", "Digital Twin" , "Data Science"] },
+            { name: "Glen Turley", company: "Coventry University", capabilities: ["Metrology", "Design", "Material Science","Design" ,"CAD"] },
+            { name: "Shone George", company: "Coventry University", capabilities: ["Six Sigma", "Digital Twin", "Design for Manufacturing", "Design" ,"CAD"] },
+            { name: "Kathy Zhang", company: "Coventry University", capabilities: ["Sustainability", "Net Zero"] }, // Corrected: Added comma here
+            { name: "Masoud Ahmadinia", company: "Coventry University", capabilities: ["Sustainability", "Net Zero", "Tool maker", "AI", "website buider", ] }
+        ]; // Corrected: Added comma here
+
+        // Get references to DOM elements
+        const searchInput = document.getElementById('capabilitySearch');
+        const searchButton = document.getElementById('searchButton');
+        const resultsDiv = document.getElementById('results');
+        const resultsList = document.getElementById('resultsList');
+        const messageBox = document.getElementById('messageBox');
+
+        // Event listener for search button click
+        searchButton.addEventListener('click', () => {
+            const searchTerm = searchInput.value.trim().toLowerCase(); // Get search term and convert to lower case
+            resultsList.innerHTML = ''; // Clear previous results
+            resultsDiv.classList.add('hidden'); // Hide results section initially
+            hideMessage(); // Hide any previous messages
+
+            // Check if the search term is empty
+            if (searchTerm === '') {
+                showMessage("Please enter a capability to search.", 'bg-yellow-100 text-yellow-800');
+                return; // Stop execution if search term is empty
+            }
+
+            // Filter engineers based on the search term
+            const matchingEngineers = engineersData.filter(engineer =>
+                // Check if any of the engineer's capabilities include the search term (case-insensitive)
+                engineer.capabilities.some(capability =>
+                    capability.toLowerCase().includes(searchTerm)
+                )
+            );
+
+            // Display results or a message if no engineers are found
+            if (matchingEngineers.length > 0) {
+                // Display results
+                matchingEngineers.forEach(engineer => {
+                    const resultItem = document.createElement('p');
+                    // Added styling for individual result items using Tailwind classes
+                    resultItem.className = 'text-gray-800 py-2 border-b border-gray-200 last:border-b-0'; // Added padding and border
+                    resultItem.textContent = `${engineer.name} (${engineer.company})`;
+                    resultsList.appendChild(resultItem);
+                });
+                resultsDiv.classList.remove('hidden'); // Show the results section
+            } else {
+                // Show message if no engineers are found
+                showMessage(`No engineers found with the capability "${searchTerm}".`, 'bg-yellow-100 text-yellow-800');
+            }
+        });
+
+        // Function to display messages in the message box
+        function showMessage(message, className) {
+            messageBox.textContent = message;
+            // Ensure existing classes like shadow-sm and rounded-lg are kept when updating
+            messageBox.className = `mt-6 p-4 rounded-lg shadow-sm ${className}`; // Apply dynamic class and retain base styles
+            messageBox.classList.remove('hidden'); // Make the message box visible
+        }
+
+        // Function to hide the message box
+        function hideMessage() {
+            messageBox.classList.add('hidden'); // Hide the message box
+            messageBox.textContent = ''; // Clear message text
+        }
+
+    </script>
+</body>
+</html>
